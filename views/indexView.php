@@ -12,14 +12,21 @@ include('includes/header.php');
 
 	<h1>Mon application bancaire</h1>
 
-	<form class="newAccount" action="../controllers/account.php" method="post">
+	<form class="newAccount" action="index.php" method="post">
 		<label>Sélectionner un type de compte</label>
 		<select class="" name="name" required>
 			<option value="" disabled>Choisissez le type de compte à ouvrir</option>
-			<?php // Listez les options possibles à choisir (compte courant, PEL, etc.) ?>
+			<?php foreach ($arrayAccount as $account) {
+
+			 	echo '<option value="'. $account .'" >'. $account .'</option>';
+				
+			} ?>
 		</select>
 		<input type="submit" name="new" value="Ouvrir un nouveau compte">
 	</form>
+	<?php if (isset($errorCreate) AND !empty($errorCreate)) {
+		echo '<p class="text-error">' . $errorCreate . '</p>';
+	}?>
 
 	<hr>
 

@@ -7,7 +7,7 @@ class Account
 
     protected $id,
               $name,
-              $balance;
+              $balance = 80;
 
     /**
      * Construct
@@ -15,7 +15,7 @@ class Account
      * @param array $array
      * @return void
      */
-    public function __conctruct(array $array) 
+    public function __construct(array $array) 
     {
         $this->hydrate($array);
     }
