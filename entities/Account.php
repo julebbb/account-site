@@ -74,9 +74,9 @@ class Account
      *
      * @return  self
      */ 
-    public function setId(int $id)
+    public function setId($id)
     {
-        $this->id = $id;
+        $this->id = (int) $id;
 
         return $this;
     }
@@ -98,10 +98,26 @@ class Account
      *
      * @return  self
      */ 
-    public function setBalance( int $balance)
+    public function setBalance( $balance)
     {
-                $this->balance = $balance;
+                $this->balance = (int) $balance;
 
                 return $this;
+    }
+
+    public function credit(int $credit) {
+        $balance = $this->getBalance();
+
+        $result = $balance + $credit;
+
+        $this->setBalance($result); 
+    }
+
+    public function debit(int $debit) {
+        $balance = $this->getBalance();
+
+        $result = $balance - $debit;
+
+        $this->setBalance($result);
     }
 }

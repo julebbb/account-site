@@ -38,9 +38,50 @@ class AccountManager
         return $this;
     }
 
-    //afficher toutes les db
+    /**
+     * Take all account in db and display
+     *
+     * @return array
+     */
+    public function getAccounts() {
+        $arrayOfAccounts = [];
 
-    //create account
+        $query = $this->getDb()->query('SELECT * FROM accounts');
+        $dataAccounts = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($dataAccounts as $dataAccount) {
+            $arrayOfAccounts[] = new Account($dataAccount);
+        }
+
+        return $arrayOfAccounts;
+    }
+
+    /**
+     * Get one account by id or name
+     *
+     * @param int or string $element
+     * @return void
+     */
+    public function getAccount($element) {
+
+        if (is_string($element)) {
+
+            $query = $this->getDB()->prepare('SELECT * FROM accounts WHERE name = :name');
+            $query->bindValue('name', $element, PDO::PARAM_STR);
+            $query->execute();
+
+        } elseif (is_int($element)) {
+
+            $query = $this->getDB()->prepare('SELECT * FROM characters WHERE id = :id');
+            $query->bindValue('id', $element, PDO::PARAM_INT);
+            $query->execute();
+        }
+
+        $dataAccount = $query->fetch(PDO::FETCH_ASSOC);
+
+        return new Account($dataAccount);
+    }
+
     /**
      * Add account function
      *
@@ -53,7 +94,6 @@ class AccountManager
         $query->execute();
     }
 
-    //Check if exist
     /**
      *Function who check if exist
      *
@@ -75,7 +115,16 @@ class AccountManager
         // If is not in db
         return false;
     }
+
     //edit account
+   
     //delete account
 
+    //TRANSFERT ENTRE COMPTE AUSSI
+    public function transfer(Account $beginAccount, Account $endAccount, int $numTransfer) {
+
+        $beginAccount->debit($numTransfer);
+        $endAccount->credit($numTransfer);
+
+    }
 }

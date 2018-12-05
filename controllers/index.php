@@ -19,10 +19,10 @@ $db = Database::DB();
 //New manager for account
 $accountManager = new AccountManager($db);
 
-//array for display type of account
+//Array for display type of account
 $arrayAccount = ['Compte courant', 'PEL', 'Livret A', 'Compte joint'];
 
-//variable for display errors
+//Variable for display errors
 $errorCreate = "";
 
 //**** ADD NEW ACCOUNT ****
@@ -46,6 +46,12 @@ if (isset($_POST['name']) AND !empty($_POST['name'])) {
         $errorCreate = "Erreur dans le select !";
     }
 }
+
+//**** DISPLAY ACCOUNT EXIST ****/
+$displayAccount = $accountManager->getAccounts();
+
+
+//**** TRANSFERT BETWEEN ACCOUNT ****/
 
 
 include "../views/indexView.php";
