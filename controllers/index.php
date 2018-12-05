@@ -130,4 +130,16 @@ AND !empty($_POST['transfer']) AND !empty($_POST['idPayment']) AND !empty($_POST
     }
 }
 
+/**** DELETE ACCOUNT ****/
+if (isset($_POST['id']) AND isset($_POST['delete']) AND !empty($_POST['id']) AND !empty($_POST['delete'])) {
+    $id = (int) $_POST['id'];
+
+    if ($id > 0) {
+        $account = $accountManager->getAccount($id);
+        $accountManager->delete($account);
+
+        header('Location: index.php');
+    }
+}
+
 include "../views/indexView.php";

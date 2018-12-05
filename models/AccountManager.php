@@ -130,8 +130,20 @@ class AccountManager
         $query->execute();
     }
     //delete account
+    public function delete(Account $account) {
+        $query = $this->getDb()->prepare('DELETE FROM accounts WHERE id = :id');
+        $query->bindValue('id', $account->getId(), PDO::PARAM_INT);
+        $query->execute();
+    }
 
-    //TRANSFERT ENTRE COMPTE AUSSI
+    /**
+     * Tranfer function between account
+     *
+     * @param Account $beginAccount
+     * @param Account $endAccount
+     * @param integer $numTransfer
+     * @return void
+     */
     public function transfer(Account $beginAccount, Account $endAccount, int $numTransfer) {
 
         $beginAccount->debit($numTransfer);
