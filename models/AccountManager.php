@@ -137,5 +137,8 @@ class AccountManager
         $beginAccount->debit($numTransfer);
         $endAccount->credit($numTransfer);
 
+        $this->update($beginAccount);
+        $this->update($endAccount);
+
     }
 }

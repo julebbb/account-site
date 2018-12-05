@@ -58,14 +58,23 @@ if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['payment']
     $id = (int) $_POST['id'];
     $balance = (int) $_POST['balance'];
 
-    $account = $accountManager->getAccount($id);
+    if ($id > 0 AND $balance > 0) 
+    {
+        $account = $accountManager->getAccount($id);
 
-    $account->credit($balance);
+        $account->credit($balance);
 
-    $accountManager->update($account);
+        $accountManager->update($account);
 
-    header('Location: index.php');
+        header('Location: index.php');
+    }
+    else 
+    {
+        $errorsAccount = 'Il faut indiquer une somme supérieur à 0 pour pouvoir créditer !';
+    }
 }
+
+$errorsAccount = "";
 
 //**** DEBIT ACCOUNT ****/
 if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['debit'])
@@ -74,15 +83,51 @@ if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['debit'])
     $id = (int) $_POST['id'];
     $balance = (int) $_POST['balance'];
 
-    $account = $accountManager->getAccount($id);
+    if ($id > 0 AND $balance > 0) {
+        $account = $accountManager->getAccount($id);
 
-    $account->debit($balance);
+        $account->debit($balance);
 
-    $accountManager->update($account);
+        $accountManager->update($account);
     
-    header('Location: index.php');
-}
-//**** TRANSFERT BETWEEN ACCOUNT ****/
+        header('Location: index.php');
+    } else {
+        $errorsAccount = 'Il faut indiquer une somme supérieur à 0 pour pouvoir débiter !';
+    }
 
+   
+}
+
+$errorTransfer = "";
+
+//**** TRANSFERT BETWEEN ACCOUNT ****/
+if (isset($_POST['transfer']) AND isset($_POST['idPayment']) AND isset($_POST['idDebit']) AND isset($_POST['balance'])
+AND !empty($_POST['transfer']) AND !empty($_POST['idPayment']) AND !empty($_POST['idDebit']) AND !empty($_POST['balance'])) {
+    $idPayment = (int) $_POST['idPayment'];
+    $idDebit = (int) $_POST['idDebit'];
+    $balance = (int) $_POST['balance'];
+    if ($balance > 0) {
+        if ($idPayment > 0 AND $idDebit > 0) {
+
+            //Account who we give money
+            $accountPayment = $accountManager->getAccount($idPayment);
+            //Create a object with db
+
+            //Account who we take money
+            $accountDebit = $accountManager->getAccount($idDebit);
+            //Create a object with db
+            
+            
+            $accountManager->transfer($accountDebit, $accountPayment, $balance);
+
+            header('Location: index.php');
+
+        } else {
+            $errorTransfer = "Erreur au niveau des comptes sont t'ils bien selectionnées ?";
+        }
+    } else {
+        $errorTransfer = "Il faut indiquer une somme supérieur à 0 pour pouvoir tranférer à un autre compte !";
+    }
+}
 
 include "../views/indexView.php";

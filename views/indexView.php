@@ -47,6 +47,11 @@ include('includes/header.php');
 
 					<!-- Formulaire pour dépot/retrait -->
 					<h4>Dépot / Retrait</h4>
+					<?php if (isset($errorAccount) AND !empty($errorAccount)) {
+						echo '<p>' . $errorAccount . '</p>';
+					}
+					
+					?>
 					<form action="index.php" method="post">
 						<input type="hidden" name="id" value=" <?php echo $account->getId(); ?>"  required>
 						<label>Entrer une somme à débiter/créditer</label>
@@ -71,7 +76,7 @@ include('includes/header.php');
 
 								if ($account->getId() != $otherAccount->getId()) 
 								{
-									echo '<option value="'.$otherAccount->getName().'" >'.$otherAccount->getName().'</option>';
+									echo '<option value="'.$otherAccount->getId().'" >'.$otherAccount->getName().'</option>';
 									
 								}
 							}	?>
