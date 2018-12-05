@@ -51,6 +51,37 @@ if (isset($_POST['name']) AND !empty($_POST['name'])) {
 $displayAccount = $accountManager->getAccounts();
 
 
+//**** CREDIT ACCOUNT ****/
+if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['payment'])
+    AND !empty($_POST['id'] AND !empty($_POST['balance']) AND !empty($_POST['payment']))) {
+
+    $id = (int) $_POST['id'];
+    $balance = (int) $_POST['balance'];
+
+    $account = $accountManager->getAccount($id);
+
+    $account->credit($balance);
+
+    $accountManager->update($account);
+
+    header('Location: index.php');
+}
+
+//**** DEBIT ACCOUNT ****/
+if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['debit'])
+    AND !empty($_POST['id'] AND !empty($_POST['balance']) AND !empty($_POST['debit']))) {
+
+    $id = (int) $_POST['id'];
+    $balance = (int) $_POST['balance'];
+
+    $account = $accountManager->getAccount($id);
+
+    $account->debit($balance);
+
+    $accountManager->update($account);
+    
+    header('Location: index.php');
+}
 //**** TRANSFERT BETWEEN ACCOUNT ****/
 
 

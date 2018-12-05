@@ -72,7 +72,7 @@ class AccountManager
 
         } elseif (is_int($element)) {
 
-            $query = $this->getDB()->prepare('SELECT * FROM characters WHERE id = :id');
+            $query = $this->getDB()->prepare('SELECT * FROM accounts WHERE id = :id');
             $query->bindValue('id', $element, PDO::PARAM_INT);
             $query->execute();
         }
@@ -117,7 +117,18 @@ class AccountManager
     }
 
     //edit account
-   
+    /**
+     * Update db to account
+     *
+     * @param Account $account
+     * @return void
+     */
+    public function update(Account $account) {
+        $query = $this->getDb()->prepare('UPDATE accounts SET balance = :balance WHERE id = :id');
+        $query->bindValue('balance', $account->getBalance(), PDO::PARAM_INT);
+        $query->bindValue('id', $account->getId(), PDO::PARAM_INT);
+        $query->execute();
+    }
     //delete account
 
     //TRANSFERT ENTRE COMPTE AUSSI
