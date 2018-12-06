@@ -14,7 +14,15 @@ function chargerClasse($classname)
 }
 spl_autoload_register('chargerClasse');
 
+session_start();
+
+if (!isset($_SESSION['user'])) {
+    
+}
+
 $db = Database::DB();
+
+$userManager = new UserManager($db);
 
 //New manager for account
 $accountManager = new AccountManager($db);
@@ -48,7 +56,7 @@ if (isset($_POST['name']) AND !empty($_POST['name'])) {
 }
 
 //**** DISPLAY ACCOUNT EXIST ****/
-$displayAccount = $accountManager->getAccounts();
+// $displayAccount = $accountManager->getAccounts();
 
 
 //**** CREDIT ACCOUNT ****/

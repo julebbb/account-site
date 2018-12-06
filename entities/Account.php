@@ -7,7 +7,7 @@ abstract class Account
 
     protected $id,
               $name,
-              $balance,
+              $balance = 0,
               $id_user;
 
     /**
@@ -133,6 +133,7 @@ abstract class Account
         $balance = $this->getBalance();
 
         $result = $balance + $credit;
+
 
         $this->setBalance($result); 
     }

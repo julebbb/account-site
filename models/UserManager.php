@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-class AccountManager
+class UserManager
 {
     private $_db;
 
@@ -39,34 +39,6 @@ class AccountManager
     }
 
     /**
-     * Take all account in db and display
-     *
-     * @return array
-     */
-    public function getAccounts($user) {
-        $arrayOfAccounts = [];
-
-        $query = $this->getDb()->prepare('SELECT * FROM accounts WHERE id_user = :id_user');
-        $query->bindValue('id_user', $user->getId(), PDO::PARAM_STR);
-
-        $dataAccounts = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($dataAccounts as $dataAccount) {
-            if (in_array('Compte courant', $dataAccount, true)) {
-                $arrayOfAccounts[] = new CompteCourant($dataAccount);
-            } elseif (in_array('PEL', $dataAccount, true)) {
-                $arrayOfAccounts[] = new PEL($dataAccount);
-            } elseif (in_array('Livret A', $dataAccount, true)) {
-                $arrayOfAccounts[] = new LivretA($dataAccount);
-            } elseif (in_array('Compte joint', $dataAccount, true)) {
-                $arrayOfAccounts[] = new CompteJoint($dataAccount);
-            }
-        }
-
-        return $arrayOfAccounts;
-    }
-
-    /**
      * Get one account by id or name
      *
      * @param int or string $element 
@@ -87,22 +59,13 @@ class AccountManager
 
             $query = $this->getDB()->prepare('SELECT * FROM accounts WHERE id = :id AND id_user = :id_user');
             $query->bindValue('id', $element, PDO::PARAM_INT);
-            $query->bindValue('id_user', $id_user, PDO::PARAM_INT);
 
             $query->execute();
         }
 
-        $dataAccount = $query->fetch(PDO::FETCH_ASSOC);
+        $dataUser = $query->fetch(PDO::FETCH_ASSOC);
 
-        if (in_array("PEL", $dataAccount, true)) {
-            return new PEL($dataAccount);
-        } elseif (in_array("Compte courant", $dataAccount, true)) {
-            return new CompteCourant($dataAccount);
-        } elseif (in_array("Compte joint", $dataAccount, true)) {
-            return new CompteJoint($dataAccount);
-        }elseif (in_array("Livret A", $dataAccount, true)) {
-            return new LivretA($dataAccount);
-        }
+        return new User($dataUser);
     }
 
     /**
@@ -149,7 +112,7 @@ class AccountManager
      * @param Account $account
      * @return void
      */
-    public function update(Account $account) {
+    public function update($account) {
         $query = $this->getDb()->prepare('UPDATE accounts SET balance = :balance WHERE id = :id AND id_user = :id_user');
         $query->bindValue('balance', $account->getBalance(), PDO::PARAM_INT);
         $query->bindValue('id_user', $account->getId_user(), PDO::PARAM_INT);
@@ -163,7 +126,7 @@ class AccountManager
      * @param Account $account
      * @return void
      */
-    public function delete(Account $account) {
+    public function delete($account) {
         $query = $this->getDb()->prepare('DELETE FROM accounts WHERE id = :id AND id_user = :id_user');
         $query->bindValue('id', $account->getId(), PDO::PARAM_INT);
         $query->bindValue('id_user', $account->getId_user(), PDO::PARAM_INT);
@@ -171,21 +134,4 @@ class AccountManager
         $query->execute();
     }
 
-    /**
-     * Tranfer function between account
-     *
-     * @param Account $beginAccount
-     * @param Account $endAccount
-     * @param integer $numTransfer
-     * @return void
-     */
-    public function transfer(Account $beginAccount, Account $endAccount, int $numTransfer) {
-
-        $beginAccount->debit($numTransfer);
-        $endAccount->credit($numTransfer);
-
-        $this->update($beginAccount);
-        $this->update($endAccount);
-
-    }
 }
