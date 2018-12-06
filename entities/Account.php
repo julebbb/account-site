@@ -2,12 +2,13 @@
 
 declare(strict_types = 1);
 
-class Account
+abstract class Account
 {
 
     protected $id,
               $name,
-              $balance = 80;
+              $balance,
+              $id_user;
 
     /**
      * Construct
@@ -67,6 +68,14 @@ class Account
                 return $this->balance;
     }
 
+    /**
+     * Get the value of id_user
+     */ 
+    public function getId_user()
+    {
+        return $this->id_user;
+    }
+
     //SETTER
 
     /**
@@ -104,6 +113,21 @@ class Account
 
                 return $this;
     }
+
+    /**
+     * Set the value of id_user
+     *
+     * @return  self
+     */ 
+    public function setId_user($id_user)
+    {
+        $this->id_user = (int) $id_user;
+
+        return $this;
+    }
+
+
+    //Method
 
     public function credit(int $credit) {
         $balance = $this->getBalance();

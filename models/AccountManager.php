@@ -43,14 +43,24 @@ class AccountManager
      *
      * @return array
      */
-    public function getAccounts() {
+    public function getAccounts($user) {
         $arrayOfAccounts = [];
 
-        $query = $this->getDb()->query('SELECT * FROM accounts');
+        $query = $this->getDb()->prepare('SELECT * FROM accounts WHERE id_user = :id_user');
+        $query->bindValue('id_user', $user->getId(), PDO::PARAM_STR);
+
         $dataAccounts = $query->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($dataAccounts as $dataAccount) {
-            $arrayOfAccounts[] = new Account($dataAccount);
+            if (in_array('Compte courant', $dataAccount, true)) {
+                $arrayOfAccounts[] = new CompteCourant($dataAccount);
+            } elseif (in_array('PEL', $dataAccount, true)) {
+                $arrayOfAccounts[] = new PEL($dataAccount);
+            } elseif (in_array('Livret A', $dataAccount, true)) {
+                $arrayOfAccounts[] = new LivretA($dataAccount);
+            } elseif (in_array('Compte joint', $dataAccount, true)) {
+                $arrayOfAccounts[] = new CompteJoint($dataAccount);
+            }
         }
 
         return $arrayOfAccounts;
@@ -88,9 +98,10 @@ class AccountManager
      * @param object $account
      */
     public function add(Account $account) {
-        $query = $this->getDb()->prepare('INSERT INTO accounts(name, balance) VALUES (:name, :balance)');
+        $query = $this->getDb()->prepare('INSERT INTO accounts(name, balance, id_user) VALUES (:name, :balance, id_user)');
         $query->bindValue('name', $account->getName(), PDO::PARAM_STR);
         $query->bindValue('balance', $account->getBalance(), PDO::PARAM_INT);
+        $query->bindValue('id_user', $account->getId_user(), PDO::PARAM_INT);
         $query->execute();
     }
 
@@ -102,7 +113,7 @@ class AccountManager
      */
     public function checkIfExist(string $name) {
 
-        $query = $this->getDb()->prepare('SELECT * FROM accounts WHERE name = :name');
+        $query = $this->getDb()->prepare('SELECT * FROM accounts WHERE id_user = :id_user AND name = :name');
         $query->bindValue('name', $name, PDO::PARAM_STR);
         $query->execute();
 

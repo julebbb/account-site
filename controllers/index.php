@@ -86,11 +86,18 @@ if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['debit'])
     if ($id > 0 AND $balance > 0) {
         $account = $accountManager->getAccount($id);
 
-        $account->debit($balance);
+        if ($account->getName() != "PEL") {
+            
+            $account->debit($balance);
 
-        $accountManager->update($account);
+            $accountManager->update($account);
     
-        header('Location: index.php');
+            header('Location: index.php');
+        } else {
+            $errorsAccount = 'Vous ne pouvez pas débiter sur ce compte !';
+        }
+
+        
     } else {
         $errorsAccount = 'Il faut indiquer une somme supérieur à 0 pour pouvoir débiter !';
     }
@@ -116,11 +123,16 @@ AND !empty($_POST['transfer']) AND !empty($_POST['idPayment']) AND !empty($_POST
             //Account who we take money
             $accountDebit = $accountManager->getAccount($idDebit);
             //Create a object with db
-            
-            
-            $accountManager->transfer($accountDebit, $accountPayment, $balance);
 
-            header('Location: index.php');
+            if ($accountDebit->getName() != "PEL") {
+                
+                $accountManager->transfer($accountDebit, $accountPayment, $balance);
+
+                header('Location: index.php');
+            } else {
+                $errorTransfer = "Vous ne pouvez transférer de l'argent depuis le compte PEL !";
+            }
+            
 
         } else {
             $errorTransfer = "Erreur au niveau des comptes sont t'ils bien selectionnées ?";
