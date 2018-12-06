@@ -1,6 +1,5 @@
 <?php
 
-// On enregistre notre autoload.
 function chargerClasse($classname)
 {
     if(file_exists('../models/'. $classname.'.php'))
@@ -17,6 +16,8 @@ spl_autoload_register('chargerClasse');
 session_start();
 
 if (!isset($_SESSION['user'])) {
+
+    header('Location: registration.php');
     
 }
 
