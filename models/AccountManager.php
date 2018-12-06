@@ -116,7 +116,6 @@ class AccountManager
         return false;
     }
 
-    //edit account
     /**
      * Update db to account
      *
@@ -129,7 +128,13 @@ class AccountManager
         $query->bindValue('id', $account->getId(), PDO::PARAM_INT);
         $query->execute();
     }
-    //delete account
+
+    /**
+     * Delete function
+     *
+     * @param Account $account
+     * @return void
+     */
     public function delete(Account $account) {
         $query = $this->getDb()->prepare('DELETE FROM accounts WHERE id = :id');
         $query->bindValue('id', $account->getId(), PDO::PARAM_INT);

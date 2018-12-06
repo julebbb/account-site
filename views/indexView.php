@@ -25,7 +25,7 @@ include('includes/header.php');
 		<input type="submit" name="new" value="Ouvrir un nouveau compte">
 	</form>
 	<?php if (isset($errorCreate) AND !empty($errorCreate)) {
-		echo '<p class="text-error">' . $errorCreate . '</p>';
+		echo '<p class="error-message">' . $errorCreate . '</p>';
 	}?>
 
 	<hr>
@@ -36,7 +36,16 @@ include('includes/header.php');
 
 	<?php foreach ($displayAccount as $account) { ?>
 
+		<?php if ($account->getBalance() < 0) {
+		?>
+		<div class="card-container danger">
+		<?php
+		} else {
+		?>
 		<div class="card-container">
+		
+		<?php
+		}?>
 
 			<div class="card">
 				<h3><strong><?php echo $account->getName(); ?></strong></h3>
@@ -48,7 +57,7 @@ include('includes/header.php');
 					<!-- Formulaire pour dépot/retrait -->
 					<h4>Dépot / Retrait</h4>
 					<?php if (isset($errorAccount) AND !empty($errorAccount)) {
-						echo '<p>' . $errorAccount . '</p>';
+						echo '<p class="error-message">' . $errorAccount . '</p>';
 					}
 					
 					?>
@@ -57,14 +66,23 @@ include('includes/header.php');
 						<label>Entrer une somme à débiter/créditer</label>
 						<input type="number" name="balance" placeholder="Ex: 250" required>
 						<input type="submit" name="payment" value="Créditer">
+						<?php if ($account->getName() != 'PEL') {
+						?>
 						<input type="submit" name="debit" value="Débiter">
+						<?php	
+						}?>
 					</form>
 
-
+					<?php if ($account->getName() != 'PEL') {
+					?>
 					<!-- Formulaire pour virement -->
 			 		<form action="index.php" method="post">
 
 						<h4>Transfert</h4>
+						<?php if (isset($errorTransfer) AND !empty($errorTransfer)) {
+							echo '<p class="error-message">'.$errorTransfer.'</p>';
+						}
+						?>
 						<label>Entrer une somme à transférer</label>
 						<input type="number" name="balance" placeholder="Ex: 300"  required>
 						<input type="hidden" name="idDebit" value="<?php echo $account->getId();?>" required>
@@ -82,8 +100,10 @@ include('includes/header.php');
 							}	?>
 						</select>
 						<input type="submit" name="transfer" value="Transférer l'argent">
-					</form>
+					<?php };?>
 
+					</form>
+					
 					<!-- Formulaire pour suppression -->
 			 		<form class="delete" action="index.php" method="post">
 				 		<input type="hidden" name="id" value="<?php echo $account->getId(); ?>"  required>

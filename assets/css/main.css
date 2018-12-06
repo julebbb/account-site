@@ -41,6 +41,14 @@ hr{
 	margin: auto;
 }
 
+.danger h3, .danger p {
+	color: red;
+}
+
+.danger .card {
+	background: rgba(253, 159, 124);
+}
+
 .error-message{
 	background: red;
 	color: white;
