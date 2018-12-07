@@ -7,6 +7,7 @@ include 'includes/header.php';
 
 	<header class="flex">
 		<p class="margin-right">Bienvenue sur l'application Comptes Bancaires</p>
+        <a href="connexion.php">Retour à la page connexion</a>
 	</header>
 
 
@@ -14,11 +15,11 @@ include 'includes/header.php';
 
         <h1>Inscription :</h1>
 
-        <form action="controllers/registration.php" method="post" class="flex">
+        <form action="registration.php" method="post" class="flex">
 
-        <?php//If error exist?>
-        <!--<p class="error-message"><?php //Ajout des erreurs a l'inscription   ?></p>-->
-        <?php?>
+        <?php if (!empty($errorRegister)) {?>
+        <p class="error-message"><?php echo $errorRegister; ?></p>
+        <?php }?>
 
         <label for="name">Entrez votre prénom :</label>
         <input type="text" name="name" required>
@@ -28,6 +29,9 @@ include 'includes/header.php';
 
         <label for="password">Entrez votre mot de passe :</label>
         <input type="password" name="password" required>
+
+        <label for="pass_retry">Entrez une nouvelle fois votre mot de passe :</label>
+        <input type="password" name="pass_retry" required>
 
         <input type="submit" value="Envoyer">
 

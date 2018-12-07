@@ -73,12 +73,11 @@ class UserManager
      *
      * @param object $account
      */
-    public function add($account) {
-
-        $query = $this->getDb()->prepare('INSERT INTO accounts(name, balance, id_user) VALUES (:name, :balance, id_user)');
-        $query->bindValue('name', $account->getName(), PDO::PARAM_STR);
-        $query->bindValue('balance', $account->getBalance(), PDO::PARAM_INT);
-        $query->bindValue('id_user', $account->getId_user(), PDO::PARAM_INT);
+    public function add(User $user) {
+        $query = $this->getDb()->prepare('INSERT INTO users(name, email, password) VALUES (:name, :email, :password)');
+        $query->bindValue('name', $user->getName(), PDO::PARAM_STR);
+        $query->bindValue('email', $user->getEmail(), PDO::PARAM_STR);
+        $query->bindValue('password', $user->getPassword(), PDO::PARAM_STR);
         $query->execute();
     }
 
@@ -88,11 +87,10 @@ class UserManager
      * @param string $name
      * @return boolean
      */
-    public function checkIfExist(string $name) {
+    public function checkIfExist(string $email) {
 
-        $query = $this->getDb()->prepare('SELECT * FROM accounts WHERE id_user = :id_user AND name = :name');
-        $query->bindValue('name', $name, PDO::PARAM_STR);
-        $query->bindValue('id_user', $id_user, PDO::PARAM_INT);
+        $query = $this->getDb()->prepare('SELECT * FROM users WHERE email = :email');
+        $query->bindValue('email', $email, PDO::PARAM_STR);
 
         $query->execute();
 
@@ -107,29 +105,14 @@ class UserManager
     }
 
     /**
-     * Update db to account
-     *
-     * @param Account $account
-     * @return void
-     */
-    public function update($account) {
-        $query = $this->getDb()->prepare('UPDATE accounts SET balance = :balance WHERE id = :id AND id_user = :id_user');
-        $query->bindValue('balance', $account->getBalance(), PDO::PARAM_INT);
-        $query->bindValue('id_user', $account->getId_user(), PDO::PARAM_INT);
-        $query->bindValue('id', $account->getId(), PDO::PARAM_INT);
-        $query->execute();
-    }
-
-    /**
      * Delete function
      *
      * @param Account $account
      * @return void
      */
-    public function delete($account) {
-        $query = $this->getDb()->prepare('DELETE FROM accounts WHERE id = :id AND id_user = :id_user');
+    public function delete($user) {
+        $query = $this->getDb()->prepare('DELETE FROM users WHERE id = :id');
         $query->bindValue('id', $account->getId(), PDO::PARAM_INT);
-        $query->bindValue('id_user', $account->getId_user(), PDO::PARAM_INT);
 
         $query->execute();
     }
