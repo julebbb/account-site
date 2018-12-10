@@ -81,10 +81,6 @@ if (isset($_POST['name']) AND !empty($_POST['name'])) {
 //**** DISPLAY ACCOUNT EXIST ****/
 $displayAccount = $accountManager->getAccounts($user);
 
-echo "<pre>";
-print_r($displayAccount);
-echo "</pre>";
-
 
 //**** CREDIT ACCOUNT ****/
 if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['payment'])
@@ -95,7 +91,7 @@ if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['payment']
 
     if ($id > 0 AND $balance > 0) 
     {
-        $account = $accountManager->getAccount($id);
+        $account = $accountManager->getAccount($id, $user->getId());
 
         $account->credit($balance);
 
@@ -119,7 +115,7 @@ if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['debit'])
     $balance = (int) $_POST['balance'];
 
     if ($id > 0 AND $balance > 0) {
-        $account = $accountManager->getAccount($id);
+        $account = $accountManager->getAccount($id, $user->getId());
 
         if ($account->getName() != "PEL") {
             
@@ -152,11 +148,11 @@ AND !empty($_POST['transfer']) AND !empty($_POST['idPayment']) AND !empty($_POST
         if ($idPayment > 0 AND $idDebit > 0) {
 
             //Account who we give money
-            $accountPayment = $accountManager->getAccount($idPayment);
+            $accountPayment = $accountManager->getAccount($idPayment, $user->getId());
             //Create a object with db
 
             //Account who we take money
-            $accountDebit = $accountManager->getAccount($idDebit);
+            $accountDebit = $accountManager->getAccount($idDebit, $user->getId());
             //Create a object with db
 
             if ($accountDebit->getName() != "PEL") {
@@ -182,11 +178,18 @@ if (isset($_POST['id']) AND isset($_POST['delete']) AND !empty($_POST['id']) AND
     $id = (int) $_POST['id'];
 
     if ($id > 0) {
-        $account = $accountManager->getAccount($id);
+        $account = $accountManager->getAccount($id, $user->getId());
         $accountManager->delete($account);
 
         header('Location: index.php');
     }
+}
+
+//Deconnexion 
+
+if (isset($_POST['disconnect']) AND !empty($_POST['disconnect'])) {
+    session_destroy();
+    header('Location: index.php');
 }
 
 include "../views/indexView.php";

@@ -9,7 +9,7 @@ include('includes/header.php');
 	<header class="flex">
 		<p class="margin-right">Bienvenue <?php echo $user->getName()?></p>
 		<form action="index.php" method='post'>
-			<input type="submit" value="Se déconnecter" name='disconnect'>
+			<input type="submit" value="Se déconnecter" name='disconnect' class="disconnect">
 		</form>
 	</header>
 

@@ -71,7 +71,7 @@ hr{
 
 .card-container{
 	max-width: 450px;
-	margin: auto;
+	margin: 0 auto;
 }
 
 .card-content{
@@ -153,7 +153,9 @@ header a {
 	cursor: pointer;
 }
 
-.connexion input[type=submit]:hover {
+ .connexion input[type=submit]:hover, .disconnect:hover {
+
+	cursor: pointer;
 
 	background: rgb(238, 100, 85);
 
@@ -172,7 +174,7 @@ header a {
 
 	.card-container{
 		width: 45%;
-		margin: auto;
+		margin: 0 auto;
 	}
 
 	.connexion{
