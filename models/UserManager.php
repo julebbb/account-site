@@ -42,22 +42,20 @@ class UserManager
      * Get one account by id or name
      *
      * @param int or string $element 
-     * @param int id_user
      * @return void
      */
-    public function getAccount($element, int $id_user) {
+    public function getUser($element) {
 
         if (is_string($element)) {
 
-            $query = $this->getDB()->prepare('SELECT * FROM accounts WHERE name = :name AND id_user = :id_user');
-            $query->bindValue('name', $element, PDO::PARAM_STR);
-            $query->bindValue('id_user', $id_user, PDO::PARAM_INT);
+            $query = $this->getDB()->prepare('SELECT * FROM users WHERE email = :email ');
+            $query->bindValue('email', $element, PDO::PARAM_STR);
 
             $query->execute();
 
         } elseif (is_int($element)) {
 
-            $query = $this->getDB()->prepare('SELECT * FROM accounts WHERE id = :id AND id_user = :id_user');
+            $query = $this->getDB()->prepare('SELECT * FROM users WHERE id = :id ');
             $query->bindValue('id', $element, PDO::PARAM_INT);
 
             $query->execute();

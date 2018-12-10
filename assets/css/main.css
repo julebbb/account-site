@@ -153,6 +153,12 @@ header a {
 	cursor: pointer;
 }
 
+.connexion input[type=submit]:hover {
+
+	background: rgb(238, 100, 85);
+
+}
+
 .connexion p{
 	text-align: center;
 }

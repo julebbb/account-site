@@ -7,7 +7,10 @@ include('includes/header.php');
 <div class="container">
 
 	<header class="flex">
-		<p class="margin-right">Bienvenue sur l'application Comptes Bancaires</p>
+		<p class="margin-right">Bienvenue <?php echo $user->getName()?></p>
+		<form action="index.php" method='post'>
+			<input type="submit" value="Se déconnecter" name='disconnect'>
+		</form>
 	</header>
 
 	<h1>Mon application bancaire</h1>

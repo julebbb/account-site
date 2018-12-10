@@ -3,7 +3,7 @@ include 'includes/header.php';
 
 ?>
 
-<div class="container">
+<main class="container">
 
 	<header class="flex">
 		<p class="margin-right">Bienvenue sur l'application Comptes Bancaires</p>
@@ -11,7 +11,7 @@ include 'includes/header.php';
 	</header>
 
 
-    <div class="connexion">
+    <section class="connexion">
 
         <h1>Inscription :</h1>
 
@@ -37,10 +37,10 @@ include 'includes/header.php';
 
         </form>
 
-    </div>
+    </section>
 
 
-</div>
+</main>
 
 <?php
 include 'includes/footer.php';

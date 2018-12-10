@@ -15,11 +15,14 @@ spl_autoload_register('chargerClasse');
 
 session_start();
 
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['user']) OR !is_object($_SESSION['user'])) {
 
     header('Location: connexion.php');
     
 }
+
+$user = $_SESSION['user'];
+
 
 $db = Database::DB();
 

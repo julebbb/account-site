@@ -43,7 +43,7 @@ if (isset($_POST['name']) AND isset($_POST['email']) AND isset($_POST['password'
 
                     $userManager->add($user);
 
-                    header('Location: registration.php');
+                    header('Location: connexion.php');
 
                 }
             } else {
