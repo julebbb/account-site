@@ -47,21 +47,29 @@ class AccountManager
         $arrayOfAccounts = [];
 
         $query = $this->getDb()->prepare('SELECT * FROM accounts WHERE id_user = :id_user');
-        $query->bindValue('id_user', $user->getId(), PDO::PARAM_STR);
+        $query->bindValue('id_user', $user->getId(), PDO::PARAM_INT);
+        $query->execute();
 
         $dataAccounts = $query->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($dataAccounts as $dataAccount) {
-            if (in_array('Compte courant', $dataAccount, true)) {
-                $arrayOfAccounts[] = new CompteCourant($dataAccount);
-            } elseif (in_array('PEL', $dataAccount, true)) {
+                
+            if ($dataAccount['name'] === 'PEL') {
+
                 $arrayOfAccounts[] = new PEL($dataAccount);
-            } elseif (in_array('Livret A', $dataAccount, true)) {
+            } elseif ($dataAccount['name'] === 'Livret A') {
+
                 $arrayOfAccounts[] = new LivretA($dataAccount);
-            } elseif (in_array('Compte joint', $dataAccount, true)) {
+            } elseif ($dataAccount['name'] === 'Compte courant') {
+
+                $arrayOfAccounts[] = new CompteCourant($dataAccount);
+            } elseif ($dataAccount['name'] === 'Compte joint') {
+
                 $arrayOfAccounts[] = new CompteJoint($dataAccount);
             }
+
         }
+
 
         return $arrayOfAccounts;
     }
@@ -112,7 +120,7 @@ class AccountManager
      */
     public function add($account) {
 
-        $query = $this->getDb()->prepare('INSERT INTO accounts(name, balance, id_user) VALUES (:name, :balance, id_user)');
+        $query = $this->getDb()->prepare('INSERT INTO accounts(name, balance, id_user) VALUES (:name, :balance, :id_user)');
         $query->bindValue('name', $account->getName(), PDO::PARAM_STR);
         $query->bindValue('balance', $account->getBalance(), PDO::PARAM_INT);
         $query->bindValue('id_user', $account->getId_user(), PDO::PARAM_INT);
@@ -125,7 +133,7 @@ class AccountManager
      * @param string $name
      * @return boolean
      */
-    public function checkIfExist(string $name) {
+    public function checkIfExist(string $name, int $id_user) {
 
         $query = $this->getDb()->prepare('SELECT * FROM accounts WHERE id_user = :id_user AND name = :name');
         $query->bindValue('name', $name, PDO::PARAM_STR);

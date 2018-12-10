@@ -41,14 +41,33 @@ $errorCreate = "";
 if (isset($_POST['name']) AND !empty($_POST['name'])) {
     $name = htmlspecialchars($_POST['name']);
     if (in_array($name, $arrayAccount) AND is_string($name)) {
-        if ($accountManager->checkIfExist($name)) {
+        if ($accountManager->checkIfExist($name, $user->getId())) {
             $errorCreate = "Vous ne pouvez avoir qu'un seul compte " . $name . " !";
         } else {
-
-            $newAccount = new Account(array(
-                'name' => $name
+            if ($name == "Compte courant") {
+                $newAccount = new CompteCourant(array(
+                'name' => $name,
+                'id_user' => $user->getId()
             ));
-            
+            } 
+            elseif ($name == "Livret A") {
+                $newAccount = new LivretA(array(
+                'name' => $name,
+                'id_user' => $user->getId()
+            ));
+            } 
+            elseif ($name == "PEL") {
+                $newAccount = new PEL(array(
+                'name' => $name,
+                'id_user' => $user->getId()
+            ));
+            } elseif ($name == "Compte joint") {
+                $newAccount = new CompteJoint(array(
+                'name' => $name,
+                'id_user' => $user->getId()
+            ));
+            }
+                        
             //Add account in db
             $accountManager->add($newAccount);
             header('index.php');
@@ -60,7 +79,11 @@ if (isset($_POST['name']) AND !empty($_POST['name'])) {
 }
 
 //**** DISPLAY ACCOUNT EXIST ****/
-// $displayAccount = $accountManager->getAccounts();
+$displayAccount = $accountManager->getAccounts($user);
+
+echo "<pre>";
+print_r($displayAccount);
+echo "</pre>";
 
 
 //**** CREDIT ACCOUNT ****/
