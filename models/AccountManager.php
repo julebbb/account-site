@@ -2,8 +2,13 @@
 
 declare(strict_types = 1);
 
+/**
+ * class AccountManager
+ * 
+ */
 class AccountManager
 {
+
     private $_db;
 
 
@@ -53,7 +58,8 @@ class AccountManager
         $dataAccounts = $query->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($dataAccounts as $dataAccount) {
-                
+            
+            //Verif if name of $dataAccount is name of account 
             if ($dataAccount['name'] === 'PEL') {
 
                 $arrayOfAccounts[] = new PEL($dataAccount);
@@ -79,7 +85,7 @@ class AccountManager
      *
      * @param int or string $element 
      * @param int id_user
-     * @return void
+     * @return object
      */
     public function getAccount($element, int $id_user) {
 

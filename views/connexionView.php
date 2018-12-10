@@ -2,6 +2,7 @@
 require "includes/header.php";
 ?>
 <main class="container">
+    
     <header class="flex">
 		<p class="margin-right">Bienvenue sur l'application Comptes Bancaires</p>    
     </header>
@@ -9,6 +10,10 @@ require "includes/header.php";
     <section class="connexion">
 
         <h1>Se connecter :</h1>
+
+        <?php if (!empty($errorConnect)) {?>
+        <p class="error-message"><?php echo $errorConnect;?></p>
+        <?php }?>
 
         <form action="connexion.php" method="post" class="flex">
             <label for="email">Email :</label>

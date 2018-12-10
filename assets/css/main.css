@@ -6,8 +6,15 @@ html, body{
 
 /********** MAIN PAGE **********/
 
+header a, .connexion input[type=submit], .delete input {
+	transition: 0.5s ease;
+}
+
 header{
 	background: salmon;
+	color: white;
+	font-weight: bold;
+	letter-spacing: 3px;
 }
 
 header input{
@@ -153,12 +160,17 @@ header a {
 	cursor: pointer;
 }
 
- .connexion input[type=submit]:hover, .disconnect:hover {
+ .connexion input[type=submit]:hover, .disconnect:hover, .delete input:hover{
 
 	cursor: pointer;
 
 	background: rgb(238, 100, 85);
 
+}
+
+header a:hover {
+	cursor: pointer;
+	color: rgb(206, 67, 51);
 }
 
 .connexion p{

@@ -39,7 +39,7 @@ class UserManager
     }
 
     /**
-     * Get one account by id or name
+     * Get one user by id or name
      *
      * @param int or string $element 
      * @return void
@@ -67,7 +67,7 @@ class UserManager
     }
 
     /**
-     * Add account function
+     * Add user function
      *
      * @param object $account
      */
@@ -102,17 +102,5 @@ class UserManager
         return false;
     }
 
-    /**
-     * Delete function
-     *
-     * @param Account $account
-     * @return void
-     */
-    public function delete($user) {
-        $query = $this->getDb()->prepare('DELETE FROM users WHERE id = :id');
-        $query->bindValue('id', $account->getId(), PDO::PARAM_INT);
-
-        $query->execute();
-    }
 
 }

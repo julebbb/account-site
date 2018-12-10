@@ -15,17 +15,20 @@ spl_autoload_register('chargerClasse');
 
 session_start();
 
-if (!isset($_SESSION['user']) OR !is_object($_SESSION['user'])) {
-
+if (!isset($_SESSION['user']) OR !is_object($_SESSION['user'])) 
+{
+    //If not session redirect in connexion page
     header('Location: connexion.php');
     
 }
 
+//Else take object user in session
 $user = $_SESSION['user'];
 
-
+//Create database
 $db = Database::DB();
 
+//New manager for user
 $userManager = new UserManager($db);
 
 //New manager for account
@@ -38,42 +41,71 @@ $arrayAccount = ['Compte courant', 'PEL', 'Livret A', 'Compte joint'];
 $errorCreate = "";
 
 //**** ADD NEW ACCOUNT ****
-if (isset($_POST['name']) AND !empty($_POST['name'])) {
+if (isset($_POST['name']) AND !empty($_POST['name'])) 
+{
+
     $name = htmlspecialchars($_POST['name']);
-    if (in_array($name, $arrayAccount) AND is_string($name)) {
-        if ($accountManager->checkIfExist($name, $user->getId())) {
+
+    if (in_array($name, $arrayAccount) AND is_string($name)) 
+    {
+
+        if ($accountManager->checkIfExist($name, $user->getId())) 
+        {
+            //If account exist return
             $errorCreate = "Vous ne pouvez avoir qu'un seul compte " . $name . " !";
-        } else {
-            if ($name == "Compte courant") {
+        
+        } 
+        else 
+        {
+            
+            //Create account in terms of $name
+            if ($name == "Compte courant")  
+            {
+             
                 $newAccount = new CompteCourant(array(
                 'name' => $name,
                 'id_user' => $user->getId()
-            ));
+                ));
+            
             } 
-            elseif ($name == "Livret A") {
+            elseif ($name == "Livret A") 
+            {
+            
                 $newAccount = new LivretA(array(
                 'name' => $name,
                 'id_user' => $user->getId()
-            ));
+                ));
+            
             } 
-            elseif ($name == "PEL") {
+            elseif ($name == "PEL") 
+            {
+            
                 $newAccount = new PEL(array(
                 'name' => $name,
                 'id_user' => $user->getId()
-            ));
-            } elseif ($name == "Compte joint") {
+                ));
+            
+            } 
+            elseif ($name == "Compte joint") 
+            {
+            
                 $newAccount = new CompteJoint(array(
                 'name' => $name,
                 'id_user' => $user->getId()
-            ));
+                ));
+            
             }
                         
             //Add account in db
             $accountManager->add($newAccount);
-            header('index.php');
+            
+            header('Location: index.php');
         }
         
-    } else {
+    } 
+    else 
+    {
+        //If $name are change and something else than string
         $errorCreate = "Erreur dans le select !";
     }
 }
@@ -84,13 +116,16 @@ $displayAccount = $accountManager->getAccounts($user);
 
 //**** CREDIT ACCOUNT ****/
 if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['payment'])
-    AND !empty($_POST['id'] AND !empty($_POST['balance']) AND !empty($_POST['payment']))) {
+    AND !empty($_POST['id'] AND !empty($_POST['balance']) AND !empty($_POST['payment']))) 
+{
 
     $id = (int) $_POST['id'];
     $balance = (int) $_POST['balance'];
 
     if ($id > 0 AND $balance > 0) 
     {
+
+        //Create account and do the method credit then it's done we update and redirect
         $account = $accountManager->getAccount($id, $user->getId());
 
         $account->credit($balance);
@@ -109,27 +144,41 @@ $errorsAccount = "";
 
 //**** DEBIT ACCOUNT ****/
 if (isset($_POST['id']) AND isset($_POST['balance']) AND isset($_POST['debit'])
-    AND !empty($_POST['id'] AND !empty($_POST['balance']) AND !empty($_POST['debit']))) {
+    AND !empty($_POST['id'] AND !empty($_POST['balance']) AND !empty($_POST['debit']))) 
+{
 
     $id = (int) $_POST['id'];
     $balance = (int) $_POST['balance'];
 
-    if ($id > 0 AND $balance > 0) {
+    if ($id > 0 AND $balance > 0) 
+    {
+
         $account = $accountManager->getAccount($id, $user->getId());
 
-        if ($account->getName() != "PEL") {
+        //Check if account is not PEL
+        if ($account->getName() !== "PEL") 
+        {
             
+            //Create account and do the method credit then it's done we update and redirect
             $account->debit($balance);
 
             $accountManager->update($account);
     
             header('Location: index.php');
-        } else {
+
+        } 
+        else 
+        {
+
             $errorsAccount = 'Vous ne pouvez pas débiter sur ce compte !';
+        
         }
 
         
-    } else {
+    } 
+    else 
+    {
+
         $errorsAccount = 'Il faut indiquer une somme supérieur à 0 pour pouvoir débiter !';
     }
 
@@ -140,10 +189,12 @@ $errorTransfer = "";
 
 //**** TRANSFERT BETWEEN ACCOUNT ****/
 if (isset($_POST['transfer']) AND isset($_POST['idPayment']) AND isset($_POST['idDebit']) AND isset($_POST['balance'])
-AND !empty($_POST['transfer']) AND !empty($_POST['idPayment']) AND !empty($_POST['idDebit']) AND !empty($_POST['balance'])) {
+AND !empty($_POST['transfer']) AND !empty($_POST['idPayment']) AND !empty($_POST['idDebit']) AND !empty($_POST['balance'])) 
+{
     $idPayment = (int) $_POST['idPayment'];
     $idDebit = (int) $_POST['idDebit'];
     $balance = (int) $_POST['balance'];
+
     if ($balance > 0) {
         if ($idPayment > 0 AND $idDebit > 0) {
 
@@ -155,20 +206,29 @@ AND !empty($_POST['transfer']) AND !empty($_POST['idPayment']) AND !empty($_POST
             $accountDebit = $accountManager->getAccount($idDebit, $user->getId());
             //Create a object with db
 
-            if ($accountDebit->getName() != "PEL") {
+            //Check if account is not PEL
+            if ($accountDebit->getName() !== "PEL") 
+            {
                 
                 $accountManager->transfer($accountDebit, $accountPayment, $balance);
 
                 header('Location: index.php');
-            } else {
+            }
+            else
+            {
                 $errorTransfer = "Vous ne pouvez transférer de l'argent depuis le compte PEL !";
             }
             
 
-        } else {
+        } 
+        else
+        {
             $errorTransfer = "Erreur au niveau des comptes sont t'ils bien selectionnées ?";
         }
-    } else {
+
+    } 
+    else 
+    {
         $errorTransfer = "Il faut indiquer une somme supérieur à 0 pour pouvoir tranférer à un autre compte !";
     }
 }
@@ -178,16 +238,19 @@ if (isset($_POST['id']) AND isset($_POST['delete']) AND !empty($_POST['id']) AND
     $id = (int) $_POST['id'];
 
     if ($id > 0) {
+
         $account = $accountManager->getAccount($id, $user->getId());
         $accountManager->delete($account);
 
+        //Redirect when it's done
         header('Location: index.php');
     }
 }
 
-//Deconnexion 
+/**** DISCONNECT ****/
 
-if (isset($_POST['disconnect']) AND !empty($_POST['disconnect'])) {
+if (isset($_POST['disconnect']) AND !empty($_POST['disconnect']))
+{
     session_destroy();
     header('Location: index.php');
 }
